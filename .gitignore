@@ -4,3 +4,5 @@ build/
 .svelte-kit/
 src-tauri/target/
 .DS_Store
+test-results/
+playwright-report/

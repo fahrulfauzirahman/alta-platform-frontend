@@ -1,1 +1,18 @@
-:root { --alta-space-1: 4px; --alta-space-2: 8px; --alta-space-4: 16px; }
+:root {
+  --alta-space-1: 4px;
+  --alta-space-2: 8px;
+  --alta-space-3: 12px;
+  --alta-space-4: 16px;
+  --alta-space-6: 24px;
+  --alta-space-8: 32px;
+  --alta-radius-sm: 6px;
+  --alta-radius-md: 10px;
+  --alta-radius-lg: 16px;
+  --alta-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.08);
+  --alta-shadow-md: 0 4px 12px rgb(0 0 0 / 0.12);
+  --alta-focus-ring: 0 0 0 3px color-mix(in srgb, var(--alta-focus) 35%, transparent);
+  --alta-touch-min: 44px;
+  --alta-break-sm: 640px;
+  --alta-break-md: 900px;
+  --alta-break-lg: 1280px;
+}

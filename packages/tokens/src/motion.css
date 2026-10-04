@@ -1,0 +1,10 @@
+:root {
+  --alta-motion-fast: 120ms;
+  --alta-motion-normal: 200ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --alta-motion-fast: 0.01ms;
+    --alta-motion-normal: 0.01ms;
+  }
+}

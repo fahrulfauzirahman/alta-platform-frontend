@@ -3,3 +3,5 @@ export { default as Input } from './input/Input.svelte';
 export { default as Dialog } from './dialog/Dialog.svelte';
 export { default as Skeleton } from './skeleton/Skeleton.svelte';
 export { default as Toast } from './toast/Toast.svelte';
+export { default as Badge } from './badge/Badge.svelte';
+export { default as Dropdown } from './dropdown/Dropdown.svelte';

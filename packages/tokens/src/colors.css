@@ -1,2 +1,38 @@
-:root { --alta-bg: #fff; --alta-fg: #111; --alta-accent: #2563eb; }
-[data-theme="dark"] { --alta-bg: #111; --alta-fg: #f5f5f5; }
+:root {
+  --alta-bg: #ffffff;
+  --alta-fg: #111111;
+  --alta-muted: #5b6472;
+  --alta-border: #d7dce3;
+  --alta-accent: #2563eb;
+  --alta-accent-fg: #ffffff;
+  --alta-success: #15803d;
+  --alta-success-bg: #dcfce7;
+  --alta-warning: #b45309;
+  --alta-warning-bg: #fef3c7;
+  --alta-danger: #b91c1c;
+  --alta-danger-bg: #fee2e2;
+  --alta-info: #1d4ed8;
+  --alta-info-bg: #dbeafe;
+  --alta-focus: #2563eb;
+  --alta-disabled-bg: #e5e7eb;
+  --alta-disabled-fg: #6b7280;
+}
+[data-theme="dark"] {
+  --alta-bg: #111111;
+  --alta-fg: #f5f5f5;
+  --alta-muted: #a8b0bd;
+  --alta-border: #2c3440;
+  --alta-accent: #60a5fa;
+  --alta-accent-fg: #0b1220;
+  --alta-success: #4ade80;
+  --alta-success-bg: #052e16;
+  --alta-warning: #fbbf24;
+  --alta-warning-bg: #451a03;
+  --alta-danger: #f87171;
+  --alta-danger-bg: #450a0a;
+  --alta-info: #93c5fd;
+  --alta-info-bg: #172554;
+  --alta-focus: #93c5fd;
+  --alta-disabled-bg: #1f2937;
+  --alta-disabled-fg: #9ca3af;
+}

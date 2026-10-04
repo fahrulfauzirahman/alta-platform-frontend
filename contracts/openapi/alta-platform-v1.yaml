@@ -7,13 +7,28 @@ paths:
     get:
       operationId: healthz
       responses:
-        '200': { description: ok }
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
   /readyz:
     get:
       operationId: readyz
       responses:
-        '200': { description: ready }
-        '503': { description: not ready }
+        '200':
+          description: ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '503':
+          description: not ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
   /v1/session:
     get:
       operationId: getSession
@@ -21,36 +36,149 @@ paths:
         - { name: X-Tenant-Id, in: header, required: true, schema: { type: string, format: uuid } }
         - { name: X-Actor-Id, in: header, required: false, schema: { type: string, format: uuid } }
       responses:
-        '200': { description: session }
+        '200':
+          description: session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
   /v1/reference-items:
     get:
       operationId: listReferenceItems
       parameters:
         - { name: X-Tenant-Id, in: header, required: true, schema: { type: string, format: uuid } }
-        - { name: limit, in: query, schema: { type: integer, default: 50 } }
+        - { name: limit, in: query, schema: { type: integer, default: 50, minimum: 1, maximum: 200 } }
       responses:
-        '200': { description: list }
+        '200':
+          description: list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferenceItemList'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
     post:
       operationId: createReferenceItem
       parameters:
         - { name: X-Tenant-Id, in: header, required: true, schema: { type: string, format: uuid } }
-        - { name: Idempotency-Key, in: header, schema: { type: string } }
+        - { name: Idempotency-Key, in: header, schema: { type: string, format: uuid } }
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [title]
-              properties:
-                title: { type: string, maxLength: 200 }
+              $ref: '#/components/schemas/CreateReferenceItemRequest'
       responses:
-        '201': { description: created }
-        '200': { description: replayed }
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferenceItem'
+        '200':
+          description: replayed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferenceItem'
+        '400':
+          description: validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
   /v1/events:
     get:
       operationId: streamEvents
       parameters:
         - { name: X-Tenant-Id, in: header, required: true, schema: { type: string, format: uuid } }
+        - { name: lastEventId, in: query, required: false, schema: { type: string, format: uuid } }
       responses:
         '200': { description: sse stream }
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [ok] }
+    Session:
+      type: object
+      required: [tenant_id, authenticated]
+      properties:
+        tenant_id: { type: string, format: uuid }
+        actor_id: { type: string, format: uuid, nullable: true }
+        authenticated: { type: boolean }
+    ReferenceItem:
+      type: object
+      required: [id, tenant_id, title, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        tenant_id: { type: string, format: uuid }
+        title: { type: string, maxLength: 200 }
+        created_at: { type: string, format: date-time }
+    ReferenceItemList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/ReferenceItem' }
+    CreateReferenceItemRequest:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, maxLength: 200, minLength: 1 }
+    ErrorEnvelope:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        request_id: { type: string }
+        status: { type: integer }
+    EventEnvelope:
+      type: object
+      required: [event_id, event_type, event_version, tenant_id, occurred_at, payload]
+      properties:
+        event_id: { type: string, format: uuid }
+        event_type: { type: string, enum: [reference_item.created.v1] }
+        event_version: { type: integer }
+        tenant_id: { type: string, format: uuid }
+        occurred_at: { type: string, format: date-time }
+        payload:
+          type: object
+          required: [id, tenant_id, title, created_at]
+          properties:
+            id: { type: string, format: uuid }
+            tenant_id: { type: string, format: uuid }
+            title: { type: string }
+            created_at: { type: string, format: date-time }

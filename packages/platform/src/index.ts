@@ -1,3 +1,3 @@
 export * from './types.js';
-export * from './web.js';
-export * from './tauri.js';
+export { webAdapter } from './web.js';
+export { tauriAdapter } from './tauri.js';

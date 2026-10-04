@@ -1,2 +1,20 @@
-:root { --alta-font: system-ui, sans-serif; }
-body { font-family: var(--alta-font); }
+:root {
+  --alta-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --alta-font-size-sm: 0.875rem;
+  --alta-font-size-md: 1rem;
+  --alta-font-size-lg: 1.25rem;
+  --alta-line-tight: 1.25;
+  --alta-line-normal: 1.5;
+}
+body {
+  font-family: var(--alta-font);
+  background: var(--alta-bg);
+  color: var(--alta-fg);
+  line-height: var(--alta-line-normal);
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schema.tauri.app/config/2/capability",
+  "identifier": "alta-desktop",
+  "description": "Least-privilege baseline for ALTA Desktop. No shell, no raw FS writes outside dialog flow.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "notification:allow-notify",
+    "opener:allow-open-url",
+    "dialog:allow-save",
+    "fs:allow-write-text-file"
+  ]
+}

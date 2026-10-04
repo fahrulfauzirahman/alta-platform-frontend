@@ -1,8 +1,14 @@
 # Frontend architecture
 
-- tokens: visual decisions only.
-- ui: accessible primitives, depends on tokens only.
-- app-shell: layout, depends on ui/tokens.
-- client: remote platform client (generated + transport + SSE), no visual deps.
-- platform: web/desktop capability abstraction; only tauri.ts may import Tauri.
-- testing: fixtures/mocks.
+- `packages/tokens`: semantic visual decisions only (colors, spacing, radius, elevation, focus, disabled, success/warning/danger/info, typography, motion, breakpoints). No component logic.
+- `packages/ui`: product-neutral accessible primitives (`Button`, `Input`, `Dialog`, `Dropdown`, `Skeleton`, `Toast`, `Badge`). Depends on tokens only. Correct semantics required (no button-as-input).
+- `packages/app-shell`: reusable SaaS layout (`AppShell`, `Topbar`, `Sidebar`) with skip link, landmarks, responsive collapse. Depends on ui/tokens only.
+- `packages/client`: remote platform client. Owns `generated/` (openapi-typescript output, never hand-edited), `http` transport (timeout, abort, envelope, user-safe errors), `api/reference-items` (typed, paginated, idempotent), `auth/session`, `errors/normalize`, `events` (envelope registry + validators), `realtime/sse` (single connection, dedup, backoff+jitter, lifecycle close, REST reconciliation). No visual deps. No `any`.
+- `packages/platform`: capability abstraction. `types` owns guards (`assertSafeExternalUrl`, `assertSafeFileName`); `web` owns web adapter; `tauri` (only file that may import Tauri) owns desktop adapter with fail-closed secure storage and no badge dependency. Web imports `@alta/platform/web`; desktop imports `@alta/platform/tauri`; barrel re-exports both for convenience but bundles tree-shake.
+- `packages/reference-items`: neutral reference/demo feature (`ReferenceItems.svelte`). Marked demo-only; not an ALTA business domain. Uses client + ui only; no direct Tauri. Consumed identically by web and desktop for parity.
+- `packages/testing`: shared `fixtures` (tenant/actor/item/session/event) and `mocks` (fetch sequence, EventSource, platform). Test-only; never imported by production routes.
+- `apps/web`: SvelteKit + adapter-node, `/api` same-origin proxy, CSP meta, web adapter. Production run: `node apps/web/build/index.js`.
+- `apps/desktop`: SvelteKit static SPA (`fallback: index.html`) + Tauri 2 (`frontendDist: ../build`, capability `alta-desktop`, CSP/security, validated `ping` command, notification/opener/dialog/fs/stronghold plugins). Static preview: serve `apps/desktop/build`.
+- `apps/storybook`: Vite static explorer importing the same production components (all states). Production build: `vite build` to `dist/`.
+- Contracts: `contracts/openapi/alta-platform-v1.yaml` (source of truth, versioned) + `contracts/events/envelope.schema.json`. Generate with `node scripts/generate-api.mjs`; verify with `node scripts/verify-contracts.mjs` (paths, operations, event, envelopes, generated freshness + determinism). Budgets: `node scripts/check-budgets.mjs` (web 400kB, desktop 400kB, storybook 200kB raw JS+CSS).
+- API base: relative `/api` in apps; `resolveBase` rejects invalid bases; `EventSource` cannot send headers so tenant travels as `tenantId` query + `lastEventId` cursor; same-origin proxy must attach `X-Tenant-Id` server-side (documented, not in repo).
