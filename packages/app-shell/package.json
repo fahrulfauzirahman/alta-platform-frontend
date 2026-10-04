@@ -1,0 +1,7 @@
+{
+  "name": "@alta/app-shell",
+  "version": "0.1.0",
+  "type": "module",
+  "svelte": "./src/index.ts",
+  "dependencies": { "@alta/ui": "workspace:*", "@alta/tokens": "workspace:*" }
+}

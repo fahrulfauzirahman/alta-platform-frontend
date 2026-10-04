@@ -1,0 +1,2 @@
+:root { --alta-bg: #fff; --alta-fg: #111; --alta-accent: #2563eb; }
+[data-theme="dark"] { --alta-bg: #111; --alta-fg: #f5f5f5; }

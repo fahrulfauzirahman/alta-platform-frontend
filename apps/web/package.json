@@ -1,0 +1,8 @@
+{
+  "name": "@alta/web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": { "dev": "vite dev", "build": "vite build", "check": "svelte-check" },
+  "dependencies": { "@alta/app-shell": "workspace:*", "@alta/client": "workspace:*", "@alta/platform": "workspace:*", "@alta/ui": "workspace:*" }
+}

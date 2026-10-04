@@ -1,0 +1,7 @@
+{
+  "name": "@alta/ui",
+  "version": "0.1.0",
+  "type": "module",
+  "svelte": "./src/index.ts",
+  "dependencies": { "@alta/tokens": "workspace:*" }
+}
